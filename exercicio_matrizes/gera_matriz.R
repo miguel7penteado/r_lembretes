@@ -30,13 +30,14 @@ matriz <- matrix(vetor,nrow=3,ncol=3)
 options("source",echo=TRUE)
 matriz
 
+options("source",echo=FALSE)
 # Resultado deve ser algo assim:
 #     [,1] [,2] [,3]
 #[1,]    1    4    7
 #[2,]    2    5    8
 #[3,]    3    6    9
 
-options("source",echo=FALSE)
+
 
 cat("\n| Gerando uma matriz simples de 3 linhas e 3 colunas ( 3x3)   |")
 cat("\n| agora nomeando as linhas e colunas com a função matrix      |")
@@ -54,13 +55,14 @@ nome_coluna <- c("a","b","c")
 message("gerando a matriz...")
 matriz <- matrix(vetor,nrow=3,ncol=3,byrow=TRUE,dimnames=list(nome_linha,nome_coluna))
 
-options("source",echo=TRUE)
-matriz
-
 # Resultado:
 #         a b c
 #
 #linha_1  1 2 3
 #linha_2  4 5 6
 #linha_3  7 8 9
+
+options("source",echo=TRUE)
+matriz
+
 
