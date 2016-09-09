@@ -122,10 +122,13 @@ message("Descompactando shape zipado no driretorio local...")
 #arquivos_descompactados <- unzip( nome_do_shape_zipado , exdir= diretorio_atual  )
 system(sprintf("unzip %s",nome_do_shape_zipado))
 
-shapefile_setores = readORG(diretorio_atual, "SETORES.shp")
-
+shapefile_setores = readOGR(diretorio_atual, "SETORES.shp")
 camada_setores = layer(spTransform(SETORES,CRS('+init=epsg:4326')),'SETORES')
 
+shapefile_municipios = readOGR(diretorio_atual, "MUNICIPIOS.shp")
+camada_municipios = layer(spTransform(MUNICIPIOS,CRS('+init=epsg:4326')),'MUNICIPIOS')
+
+osmMap(camada_setores,camada_municipios,title="Setores do Municipio")
 
 
 cat(sprintf("\n+*****************************************************************************************+"))
