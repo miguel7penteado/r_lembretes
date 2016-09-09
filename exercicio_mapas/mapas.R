@@ -30,7 +30,7 @@ if ( .Platform$OS.type == 'unix' )
 
 	cat(sprintf("Gerando diretório /exercicio_r_mapas/%s ...\n",Sys.Date()))
 	system(sprintf("mkdir -p ~/exercicio_r_mapas/%s",Sys.Date()))
-	setwd(sprintf("~/exercicio_r_mapas%s",Sys.Date()))
+	setwd(sprintf("~/exercicio_r_mapas/%s",Sys.Date()))
 	system("pwd")
 	message("Definindo mapa de caracteres com suporte a acentuação e virgula - pt_BR.UTF-8")
 #	options( encoding="pt_BR.UTF-8" )
@@ -54,8 +54,22 @@ if ( .Platform$OS.type == 'unix' )
 	}
 }
 
+if ( .Platform$OS.type == 'unix' ) 
+{	
+#	print("Por favor aguarde um instante a instalação dos pacotes gdal")
+#	print(" e proj no linux ")
+#	system("sudo apt-get update && sudo apt-get install libgdal-dev libproj-dev libclc-amdgcn libclc-r600")
+	
+} else
+{
+	if( .Platform$OS.type == 'windows' )
+	{
+#		print("Vamos ver se existem instalados os pacotes gdal")
+#		print(" e proj for windows...  ")
+#		system(" dir ")
 
-
+	}
+}	
 
 message("Apagando objetos de sessões anteriores...")
 rm(list=ls(all=TRUE))
@@ -72,7 +86,7 @@ options(repos = r)
 rm(r)
 
 message("baixando pacotes e instalando SAScci downloader RCurl setwidth devtools")
-install.packages( c( "downloader" , "RCurl" , "setwidth" , "devtools" ) )
+install.packages( c( "downloader" , "RCurl" , "setwidth" , "devtools" , "rgdal") )
 
 message("Carregando biblioteca devtools para obter colorout do github...")
 library(devtools)
@@ -90,21 +104,23 @@ library(webmaps)
 message("Carregando minha funcao de download...")
 source_url("https://raw.githubusercontent.com/miguel7penteado/ibge_r_pnad_continua/master/funcao_download.R" , prompt = FALSE , echo = FALSE)
 
+endereco_do_shape_zipado_na_net <- "https://github.com/miguel7penteado/r_lembretes/raw/master/exercicio_mapas/shapes.zip"
+
 cat("\n+*****************************************************************************************+")
-cat(sprintf("\n|baixando da internet o shapefile - %s |",system())
+cat(sprintf("\n|baixando da internet o shapefile  |",endereco_do_shape_zipado_na_net))
 cat("\n+*****************************************************************************************+")
 cat("\n")
 
-endereco_do_shape_zipado_na_net <- "ftp://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_continua/Trimestral/Microdados/Documentacao/Dicionario_e_input_20160817.zip"
+diretorio_atual <- getwd()
+nome_do_shape_zipado <- "shape_zipado.zip"
 
-nome_do_shape_zipado <- "shape_zipado"
 
-message("Baixando o arquivo de dicionáriod e variáveis da internet...")
+message("Baixando o arquivo de dicionáriod e variáveis da internet...\n")
 download_cached( endereco_do_shape_zipado_na_net , nome_do_shape_zipado , mode = 'wb' )
 
 message("Descompactando shape zipado no driretorio local...")
-arquivos_descompactados <- unzip( nome_do_shape_zipado , exdir = getwd() )
-
+#arquivos_descompactados <- unzip( nome_do_shape_zipado , exdir= diretorio_atual  )
+system(sprintf("unzip %s",nome_do_shape_zipado))
 
 cat(sprintf("\n+*****************************************************************************************+"))
 cat(sprintf("\n|  Arquivos formato RDA guardados em %s                                                   |",getwd()))
