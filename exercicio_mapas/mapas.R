@@ -122,6 +122,12 @@ message("Descompactando shape zipado no driretorio local...")
 #arquivos_descompactados <- unzip( nome_do_shape_zipado , exdir= diretorio_atual  )
 system(sprintf("unzip %s",nome_do_shape_zipado))
 
+shapefile_setores = readORG(diretorio_atual, "SETORES.shp")
+
+camada_setores = layer(spTransform(SETORES,CRS('+init=epsg:4326')),'SETORES')
+
+
+
 cat(sprintf("\n+*****************************************************************************************+"))
 cat(sprintf("\n|  Arquivos formato RDA guardados em %s                                                   |",getwd()))
 cat(sprintf("\n|  Processo finalizado !                                                                  |"))
