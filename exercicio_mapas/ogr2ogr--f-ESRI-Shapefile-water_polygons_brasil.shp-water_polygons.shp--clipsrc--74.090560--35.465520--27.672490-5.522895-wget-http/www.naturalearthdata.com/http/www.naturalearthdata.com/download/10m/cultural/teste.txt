@@ -1,8 +1,0 @@
-
-
-ogr2ogr -f "ESRI Shapefile" 1.shp origem.shp -clipsrc -74.090560 -35.465520 -27.672490 5.522895
-
-wget http://poligonos.zip
-
-ogrinfo -so -al poligono.shp 
-
