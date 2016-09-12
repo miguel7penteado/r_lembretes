@@ -33,7 +33,7 @@ if ( .Platform$OS.type == 'unix' )
 	setwd(sprintf("~/exercicio_r_mapas/%s",Sys.Date()))
 	system("pwd")
 	message("Definindo mapa de caracteres com suporte a acentuação e virgula - pt_BR.UTF-8")
-#	options( encoding="pt_BR.UTF-8" )
+#	options( encoding="UTF-8" )
     options( encoding="ISO-8859-1" )
 	
 } else{
@@ -86,7 +86,7 @@ options(repos = r)
 rm(r)
 
 message("baixando pacotes e instalando SAScci downloader RCurl setwidth devtools")
-install.packages( c( "downloader" , "RCurl" , "setwidth" , "devtools" , "rgdal") )
+install.packages( c( "downloader" , "RCurl" , "setwidth" , "devtools" , "rgdal", "sp") )
 
 message("Carregando biblioteca devtools para obter colorout do github...")
 library(devtools)
@@ -102,7 +102,7 @@ message("Carregando...")
 library(webmaps)
 
 message("Carregando minha funcao de download...")
-source_url("https://raw.githubusercontent.com/miguel7penteado/ibge_r_pnad_continua/master/funcao_download.R" , prompt = FALSE , echo = FALSE)
+source_url("https://raw.githubusercontent.com/miguel7penteado/ibge_r_pnad_continua/master/UTF-8/funcao_download.R" , prompt = FALSE , echo = FALSE)
 
 endereco_do_shape_zipado_na_net <- "https://github.com/miguel7penteado/r_lembretes/raw/master/exercicio_mapas/shapes.zip"
 
@@ -122,11 +122,11 @@ message("Descompactando shape zipado no driretorio local...")
 #arquivos_descompactados <- unzip( nome_do_shape_zipado , exdir= diretorio_atual  )
 system(sprintf("unzip %s",nome_do_shape_zipado))
 
-shapefile_setores = readOGR(diretorio_atual, "SETORES.shp")
-camada_setores = layer(spTransform(SETORES,CRS('+init=epsg:4326')),'SETORES')
+shapefile_setores = readOGR(diretorio_atual, layer="SETORES",verbose=TRUE)
+camada_setores = layer(spTransform(shapefile_setores,CRS("+init=epsg:4674")),"SETORES",lstyle(fillColor="red", fillOpacity="0.5",pointRadius="${size}"))
 
-shapefile_municipios = readOGR(diretorio_atual, "MUNICIPIOS.shp")
-camada_municipios = layer(spTransform(MUNICIPIOS,CRS('+init=epsg:4326')),'MUNICIPIOS')
+shapefile_municipios = readOGR(diretorio_atual, "MUNICIPIOS",verbose=TRUE)
+camada_municipios = layer(spTransform(MUNICIPIOS,CRS("+init=epsg:4674")),"MUNICIPIOS",lstyle(fillColor="red", fillOpacity="0.5",pointRadius="${size}"))
 
 osmMap(camada_setores,camada_municipios,title="Setores do Municipio")
 
