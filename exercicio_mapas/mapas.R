@@ -138,6 +138,9 @@ cat(sprintf("\n+****************************************************************
 cat(sprintf("\n###########################################################################################"))
 cat(sprintf("\n"))
 
+message("Slavando o shapefile no diretorio local...")
+writeOGR(trees, dsn=".", layer="SETORES_ALTERADO", driver="ESRI Shapefile")
+
 options("source",echo=TRUE)
 
 
