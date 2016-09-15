@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 cat("\n+*************************************************************+")
-cat("\n| Carregamento de uma pagina web - versão 1                   |")
+cat("\n| Carregamento de página web - versão 2                       |")
 cat("\n+*************************************************************+")
 cat("\n|                                                             |")
 cat("\n+*************************************************************+")
@@ -33,8 +33,8 @@ if ( .Platform$OS.type == 'unix' )
 	setwd(sprintf("~/exercicio_r_mapas/%s",Sys.Date()))
 	system("pwd")
 	message("Definindo mapa de caracteres com suporte a acentuação e virgula - pt_BR.UTF-8")
-#	options( encoding="UTF-8" )
-    options( encoding="ISO-8859-1" )
+	options( encoding="UTF-8" )
+#   options( encoding="ISO-8859-1" )
 	
 } else{
 	if ( .Platform$OS.type == 'windows' ) 
@@ -103,7 +103,7 @@ install.packages(c("shiny","rgdal"))
 
 library(shiny)
 
-minha_tela <- "Primeira aplicação !"
+minha_tela <- fluidPage( h1("Minha segunda pagina !"))
 
 servidor <- function(entrada, saida, sessao)
 {
