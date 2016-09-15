@@ -1,13 +1,13 @@
 #!/usr/bin/env Rscript
 
 cat("\n+*************************************************************+")
-cat("\n| Carregamento de um mapa (camada vetorial) usando shapefile  |")
+cat("\n| Carregamento de uma camada vetorial                         |")
 cat("\n+*************************************************************+")
 cat("\n|                                                             |")
 cat("\n+*************************************************************+")
 cat("\n| Versão atual: 1.0                                           |")
 cat("\n+*************************************************************+")
-cat("\n| Mantenedor e desenvolvedor atual:                           |")
+cat("\n| Mantenedor atual e desenvolvedor:                           |")
 cat("\n| Miguel Suarez Xavier Penteado <miguel7penteado@gmail.com>   |")
 cat("\n+*************************************************************+")
 cat("\n|                                                             |")
@@ -16,15 +16,23 @@ cat("\n|                                                             |")
 cat("\n+*************************************************************+")
 cat("\n")
 
+print(Sys.setenv(DIRETORIO_DO_PROJETO_R = "projeto_mapa_r", "A+C" = 123))
+Sys.getenv("DIRETORIO_DO_PROJETO_R")
+Sys.unsetenv("DIRETORIO_DO_PROJETO_R")
+
+
 message("desligando temporariamente a impressão dos comandos...")
 options("source",echo=FALSE)
 
-#R.version()
+cat("\n+*****************************************************************************************")
+sessionInfo()
+cat("\n+*****************************************************************************************")
+cat("\n")
 
 if ( .Platform$OS.type == 'unix' ) 
 {	
 	cat("\n+*****************************************************************************************+")
-	cat(sprintf("\n|Definindo o diretório de trabalho - $HOME/analise_pand_continua/%s ...|",Sys.Date()))
+	cat(sprintf("\n|Definindo o diretório de trabalho - $HOME/analise_pand_continua/%s ...|",Sys.getenv("DIRETORIO_DO_PROJETO_R")))
 	cat("\n+*****************************************************************************************+")
 	cat("\n")
 
@@ -40,7 +48,7 @@ if ( .Platform$OS.type == 'unix' )
 	if ( .Platform$OS.type == 'windows' ) 
 	{	
 		cat("\n+*****************************************************************************************+")
-		cat(sprintf("\n|Definindo o diretório de trabalho - C:\\%HOMEPATH%\\analise_pand_continua\\%s ...|",Sys.Date()))
+		cat(sprintf("\n|Definindo o diretório de trabalho - C:\\%HOMEPATH%\\analise_pand_continua\\%s ...|",Sys.getenv("DIRETORIO_DO_PROJETO_R")))
 		cat("\n+*****************************************************************************************+")
 		cat("\n")
 
@@ -75,7 +83,7 @@ message("Apagando objetos de sessões anteriores...")
 rm(list=ls(all=TRUE))
 
 cat("\n+*****************************************************************************************+")
-cat(sprintf("\n|IMPORTANDO UM ARQUIVO VETORIAL USANDO WEBMAPS - %s |",Sys.Date()))
+cat(sprintf("\n|Carregando pacotes... - %s |",Sys.Date()))
 cat("\n+*****************************************************************************************+")
 cat("\n")
 
@@ -85,8 +93,47 @@ r["CRAN"] = "https://vps.fmvz.usp.br/CRAN/"
 options(repos = r)
 rm(r)
 
+vetor_pacotes <- c( "downloader" ,
+                    "RCurl" ,
+                    "setwidth",
+                    "devtools",
+                    "rgdal",
+                    "plyr",
+                    "ggplot2",
+                    "lattice",
+                    "rgeos",
+                    "spatstat",
+                    "maptools",
+                    "maps",
+                    "RColorBrewer",
+                    "grDevices",
+                    "reshape2",
+                    "rCharts",
+                    "knitr",
+                    "base64enc",
+                    "googleVis",
+                    "sp")
+
+library(plyr)         # Para manipular dados
+library(ggplot2)      # Para ter a interface gráfica ggplot2
+library(lattice)      # Para ter a interface gráfica Lattice
+library(rgdal)        # Para carregar "shapefiles" dentro do R
+library(rgeos)        # Para usar operações geométricas
+library(spatstat)     # Para usar tesselação de Voronoi
+library(sp)           # Metodod para obter coordenadas de objetos espaciais.
+library(maptools)     # Um pacote para construir mapas.
+library(maps)         # Um pacote para construir mapas.
+library(RColorBrewer) # Um pacote para construir paletas de cor.
+library(grDevices)    # Um pacote para construir paletas de cor.
+library(reshape2)     # Um pacote para trasnformar dados com maior facilidade.
+library(rCharts)      # Um pacote para criar e customizar visualizações interativas de javascript em R
+library(knitr)        # Um pacote para geração de relatórios dinamicos
+library(base64enc)    # Ferramentas para codificação em base64
+suppressPackageStartupMessages(library(googleVis)) # Para usar com visualização Google.
+
+
 message("baixando pacotes e instalando SAScci downloader RCurl setwidth devtools")
-install.packages( c( "downloader" , "RCurl" , "setwidth" , "devtools" , "rgdal", "sp") )
+install.packages( vetor_pacotes )
 
 message("Carregando biblioteca devtools para obter colorout do github...")
 library(devtools)
@@ -122,15 +169,33 @@ message("Descompactando shape zipado no driretorio local...")
 #arquivos_descompactados <- unzip( nome_do_shape_zipado , exdir= diretorio_atual  )
 system(sprintf("unzip %s",nome_do_shape_zipado))
 
-estilho <- lstyle(fillColor="red", fillOpacity="0.5",pointRadius="${size}")
+sirgas_2000_geografico <- CRS("+init=epsg:4674")
 
-shapefile_setores = readOGR(diretorio_atual, layer="SETORES",verbose=TRUE)
-camada_setores = layer(spTransform(shapefile_setores,CRS("+init=epsg:4674")),"SETORES",estilo)
+message("Carregando o shape setores...")
+shapefile_setores <- readOGR(diretorio_atual, layer="SETORES",verbose=TRUE)
+message("Covertendo sistema de coordenadas...")
+shapefile_setores <- spTransform(shapefile_setores,sirgas_2000_geografico)
+message("Verificando de shapefile_setores é um dataframe espacial...")
+class(shapefile_setores)
+message("Verificando os atributos de shapefile_setores")
+attributes(shapefile_setores@data)
 
-OLStyle(estilo)
+message("Carregando o shape municipios...")
+shapefile_municipios <- readOGR(diretorio_atual, layer="MUNICIPIOS",verbose=TRUE)
+message("Covertendo sistema de coordenadas...")
+shapefile_municipios <- spTransform(shapefile_municipios,sirgas_2000_geografico)
+message("Verificando de shapefile_municipios é um dataframe espacial...")
+class(shapefile_municipios)
+message("Verificando os atributos de shapefile_municipios")
+attributes(shapefile_municipios@data)
 
-shapefile_municipios = readOGR(diretorio_atual, "MUNICIPIOS",verbose=TRUE)
-camada_municipios = layer(spTransform(MUNICIPIOS,CRS("+init=epsg:4674")),"MUNICIPIOS",lstyle(fillColor="red", fillOpacity="0.5",pointRadius="${size}"))
+
+#cbind
+#rbind
+
+
+message("Verificando se os sistemas de coordenadas são os mesmos:")
+identical(proj4string(shapefile_municipios),proj4string(shapefile_setores))
 
 osmMap(camada_setores,camada_municipios,title="Setores do Municipio")
 

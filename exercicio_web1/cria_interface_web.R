@@ -1,13 +1,13 @@
 #!/usr/bin/env Rscript
 
 cat("\n+*************************************************************+")
-cat("\n| Carregamento de página web - versão 2                       |")
+cat("\n| Interface web para planilha google - R                      |")
 cat("\n+*************************************************************+")
 cat("\n|                                                             |")
 cat("\n+*************************************************************+")
 cat("\n| Versão atual: 1.0                                           |")
 cat("\n+*************************************************************+")
-cat("\n| Mantenedor e desenvolvedor atual:                           |")
+cat("\n| Mantenedor atual e desenvolvedor:                           |")
 cat("\n| Miguel Suarez Xavier Penteado <miguel7penteado@gmail.com>   |")
 cat("\n+*************************************************************+")
 cat("\n|                                                             |")
@@ -16,15 +16,23 @@ cat("\n|                                                             |")
 cat("\n+*************************************************************+")
 cat("\n")
 
+print(Sys.setenv(DIRETORIO_DO_PROJETO_R = "projeto_mapa_r", "A+C" = 123))
+Sys.getenv("DIRETORIO_DO_PROJETO_R")
+Sys.unsetenv("DIRETORIO_DO_PROJETO_R")
+
+
 message("desligando temporariamente a impressão dos comandos...")
 options("source",echo=FALSE)
 
-#R.version()
+cat("\n+*****************************************************************************************")
+sessionInfo()
+cat("\n+*****************************************************************************************")
+cat("\n")
 
 if ( .Platform$OS.type == 'unix' ) 
 {	
 	cat("\n+*****************************************************************************************+")
-	cat(sprintf("\n|Definindo o diretório de trabalho - $HOME/analise_pand_continua/%s ...|",Sys.Date()))
+	cat(sprintf("\n|Definindo o diretório de trabalho - $HOME/analise_pand_continua/%s ...|",Sys.getenv("DIRETORIO_DO_PROJETO_R")))
 	cat("\n+*****************************************************************************************+")
 	cat("\n")
 
@@ -33,14 +41,14 @@ if ( .Platform$OS.type == 'unix' )
 	setwd(sprintf("~/exercicio_r_mapas/%s",Sys.Date()))
 	system("pwd")
 	message("Definindo mapa de caracteres com suporte a acentuação e virgula - pt_BR.UTF-8")
-	options( encoding="UTF-8" )
-#   options( encoding="ISO-8859-1" )
+#	options( encoding="UTF-8" )
+    options( encoding="ISO-8859-1" )
 	
 } else{
 	if ( .Platform$OS.type == 'windows' ) 
 	{	
 		cat("\n+*****************************************************************************************+")
-		cat(sprintf("\n|Definindo o diretório de trabalho - C:\\%HOMEPATH%\\analise_pand_continua\\%s ...|",Sys.Date()))
+		cat(sprintf("\n|Definindo o diretório de trabalho - C:\\%HOMEPATH%\\analise_pand_continua\\%s ...|",Sys.getenv("DIRETORIO_DO_PROJETO_R")))
 		cat("\n+*****************************************************************************************+")
 		cat("\n")
 
@@ -75,7 +83,7 @@ message("Apagando objetos de sessões anteriores...")
 rm(list=ls(all=TRUE))
 
 cat("\n+*****************************************************************************************+")
-cat(sprintf("\n|IMPORTANDO UM ARQUIVO VETORIAL USANDO WEBMAPS - %s |",Sys.Date()))
+cat(sprintf("\n|Carregando pacotes... - %s |",Sys.Date()))
 cat("\n+*****************************************************************************************+")
 cat("\n")
 
@@ -85,33 +93,26 @@ r["CRAN"] = "https://vps.fmvz.usp.br/CRAN/"
 options(repos = r)
 rm(r)
 
-message("baixando pacotes e instalando SAScci downloader RCurl setwidth devtools")
-install.packages( c( "downloader" , "RCurl" , "setwidth" , "devtools" , "rgdal", "sp") )
+vetor_pacotes <- c( "downloader" ,
+                    "RCurl" ,
+                    "setwidth",
+                    "devtools",
+                    "rgdal",
+                    "plyr",
+                    "ggplot2",
+                    "lattice",
+                    "rgeos",
+                    "mapview",
+                    "shiny",
+                    "sp")
 
-message("Carregando biblioteca devtools para obter colorout do github...")
-library(devtools)
+message("baixando pacotes e instalando downloader RCurl setwidth devtools rgdal plyr ggplot2 lattice rgeos sp ")
+install.packages( vetor_pacotes )
 
-message("Baixando e instalando biblioteca colorout...")
-install_github("jalvesaq/colorout")
-message("Carregando...")
-library(colorout)
+library(sp)
+library(ggplot2)
+library(gstat)
+library(rgdal)
+library(mapview)
 
-message("Baixando e instalando biblioteca webmap...")
-install_github("RCura/webmaps")
-
-install.packages(c("shiny","rgdal"))
-
-library(shiny)
-
-minha_tela <- fluidPage( h1("Minha segunda pagina !"))
-
-servidor <- function(input=entrada, output=saida, session=sessao)
-{
-	
-}
-
-shinyApp(minha_tela,servidor)
-
-options("source",echo=TRUE)
-
-
+install.packages("shiny")

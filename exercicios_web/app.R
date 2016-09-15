@@ -105,7 +105,7 @@ library(shiny)
 
 minha_tela <- "Primeira aplicação !"
 
-servidor <- function(entrada, saida, sessao)
+servidor <- function(input=entrada, output=saida, session=sessao)
 {
 	
 }

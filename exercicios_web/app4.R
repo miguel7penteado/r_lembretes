@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 cat("\n+*************************************************************+")
-cat("\n| Carregamento de um mapa (camada vetorial) usando shapefile  |")
+cat("\n| Carregamento de página web - versão 2                       |")
 cat("\n+*************************************************************+")
 cat("\n|                                                             |")
 cat("\n+*************************************************************+")
@@ -33,8 +33,8 @@ if ( .Platform$OS.type == 'unix' )
 	setwd(sprintf("~/exercicio_r_mapas/%s",Sys.Date()))
 	system("pwd")
 	message("Definindo mapa de caracteres com suporte a acentuação e virgula - pt_BR.UTF-8")
-#	options( encoding="UTF-8" )
-    options( encoding="ISO-8859-1" )
+	options( encoding="UTF-8" )
+#   options( encoding="ISO-8859-1" )
 	
 } else{
 	if ( .Platform$OS.type == 'windows' ) 
@@ -98,54 +98,35 @@ library(colorout)
 
 message("Baixando e instalando biblioteca webmap...")
 install_github("RCura/webmaps")
-message("Carregando...")
-library(webmaps)
 
-message("Carregando minha funcao de download...")
-source_url("https://raw.githubusercontent.com/miguel7penteado/ibge_r_pnad_continua/master/UTF-8/funcao_download.R" , prompt = FALSE , echo = FALSE)
+install.packages(c("shiny","rgdal"))
 
-endereco_do_shape_zipado_na_net <- "https://github.com/miguel7penteado/r_lembretes/raw/master/exercicio_mapas/shapes.zip"
+library(shiny)
 
-cat("\n+*****************************************************************************************+")
-cat(sprintf("\n|baixando da internet o shapefile  |",endereco_do_shape_zipado_na_net))
-cat("\n+*****************************************************************************************+")
-cat("\n")
+ui <- fluidPage(
+	h1("Minha segunda pagina !"),	
+	sidebarLayout(
+		sidebarPanel(
+			selectInput("dataset","Escolha uma entrada de dados:",choices=ls(),selected="pressure")
+		),
+		mainPanel(
+			textOutput("dump"),
+			plotOutput("plot")
+		)
+	)
+)
 
-diretorio_atual <- getwd()
-nome_do_shape_zipado <- "shape_zipado.zip"
+server <- function(input, output, session)
+{
+	
+	output$dump <- renderPrint({ 
+		dataset <- get( input$dataset , "package:datasets", inherits = FALSE)
+		#str(dataset) 
+		})
+}
 
-
-message("Baixando o arquivo de dicionáriod e variáveis da internet...\n")
-download_cached( endereco_do_shape_zipado_na_net , nome_do_shape_zipado , mode = 'wb' )
-
-message("Descompactando shape zipado no driretorio local...")
-#arquivos_descompactados <- unzip( nome_do_shape_zipado , exdir= diretorio_atual  )
-system(sprintf("unzip %s",nome_do_shape_zipado))
-
-estilho <- lstyle(fillColor="red", fillOpacity="0.5",pointRadius="${size}")
-
-shapefile_setores = readOGR(diretorio_atual, layer="SETORES",verbose=TRUE)
-camada_setores = layer(spTransform(shapefile_setores,CRS("+init=epsg:4674")),"SETORES",estilo)
-
-OLStyle(estilo)
-
-shapefile_municipios = readOGR(diretorio_atual, "MUNICIPIOS",verbose=TRUE)
-camada_municipios = layer(spTransform(MUNICIPIOS,CRS("+init=epsg:4674")),"MUNICIPIOS",lstyle(fillColor="red", fillOpacity="0.5",pointRadius="${size}"))
-
-osmMap(camada_setores,camada_municipios,title="Setores do Municipio")
-
-
-cat(sprintf("\n+*****************************************************************************************+"))
-cat(sprintf("\n|  Arquivos formato RDA guardados em %s                                                   |",getwd()))
-cat(sprintf("\n|  Processo finalizado !                                                                  |"))
-cat(sprintf("\n+*****************************************************************************************+"))
-cat(sprintf("\n###########################################################################################"))
-cat(sprintf("\n"))
-
-message("Slavando o shapefile no diretorio local...")
-writeOGR(trees, dsn=".", layer="SETORES_ALTERADO", driver="ESRI Shapefile")
+shinyApp(ui,server)
 
 options("source",echo=TRUE)
-
 
 
