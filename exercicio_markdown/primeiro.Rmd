@@ -1,6 +1,6 @@
 ---
-title: "VIII Experimento Integrado"
-author: "Laboratório Pró-Vida"
+title: "Experimento Integrado"
+author: "Laboratório "
 date: "17 de setembro de 2016"
 output: html_document
 ---
