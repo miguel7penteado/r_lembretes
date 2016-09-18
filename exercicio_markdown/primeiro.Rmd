@@ -1,0 +1,32 @@
+---
+title: "VIII Experimento Integrado"
+author: "Laboratório Pró-Vida"
+date: "17 de setembro de 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Meu primeiro Relatório
+
+Este é um documento no formato Markdown.
+<http://rmarkdown.rstudio.com>.
+
+Clique no botão **Knit** e será gerado um relatório contendo tanto a sua descrição quanto 
+o código R que é responsável por criar este documento.
+
+```{r Biblioteca carros}
+summary(cars)
+```
+
+## Gráfico da biblioteca Pressão
+
+Você também pode inserir gráficos, por exemplo:
+
+```{r Pressao, echo=TRUE}
+plot(pressure)
+```
+
+Note que `echo = FALSE` faz com que o código R que gera o relatório não seja mostrado.
