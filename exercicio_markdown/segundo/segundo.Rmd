@@ -1,0 +1,117 @@
+---
+title: "Exemplo"
+date: "`r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    highlight: kate
+    self_contained: true
+    thumbnails: false
+    lightbox: false
+---
+
+```{r knitr_init, echo=FALSE, results="asis", cache=FALSE}
+library(knitr)
+library(rmdformats)
+library(DT)
+
+## Global options
+options(max.print = "75")
+opts_chunk$set(echo = FALSE,
+	             cache = FALSE,
+               prompt = FALSE,
+               tidy = FALSE,
+               comment = NA,
+               message = FALSE,
+               warning = FALSE)
+opts_knit$set(width = 75)
+```
+
+# Código e Tabelas
+
+## Escrita realçada.
+
+Escrita realçada no código.
+
+```{r sh, echo=TRUE, eval=TRUE}
+library(ggplot2)
+library(dplyr)
+
+not_null <- function (v) {
+  if (!is.null(v)) return(paste(v, "not null"))
+}
+
+data(iris)
+tab <- iris %>%
+  group_by(Species) %>%
+  summarise(Sepal.Length = mean(Sepal.Length),
+            Sepal.Width  = mean(Sepal.Width),
+            Petal.Length = mean(Petal.Length),
+            Petal.Width  = mean(Petal.Length))
+```
+
+
+## Estudando a famosa tabela `IRIS`
+
+Here is the structure of the `iris` dataset.
+
+```{r iris_str, echo=TRUE}
+str(iris)
+```
+
+E uma citação de bloco :
+
+> Opa ! Que citação de bloco legal temos aqui. Bem mais bonita que uma clássica Lorem Ipsum, realmente.
+
+E nós poderiamos incluir [include links](https://github.com/juba/rmdformats) ou simplificar uma URLs assim : https://github.com/juba/rmdformats
+
+## Tabela
+
+Aqui está um exemplo de saída de uma tabela.
+
+```{r iris_table}
+kable(tab)
+```
+
+Aqui está um exemplo de saida `DT:datatable` .
+
+```{r iris_dt}
+DT::datatable(tab)
+```
+
+
+
+Aqui nós mostramos uma tabela cruzada crosstab mostrada em várias formas diferentes com a interface "pílulas". Para fazer isso apenas passe o resultado de `table()` para a função `pilltabs()`.
+
+```{r iris_pilltabs, results="asis"}
+
+iris$seplc <- cut(iris$Sepal.Length,3)
+tab <- table(iris$Species, iris$seplc)
+pilltabs(tab)
+
+```
+
+# Um pouco de Matemática + AJAX - Mathjax
+
+Uma equação incrivelmente complexa :
+
+$$ y = \sqrt{\frac{1}{x}} $$
+
+
+# Mostrando Figuras.
+
+Isto aqui é um histograma.
+
+```{r iris_hist}
+ggplot(data=iris) +
+    geom_histogram(aes(x=Petal.Width)) +
+    facet_grid(Species~.)
+
+```
+
+E um maravilhoso scatterplot, com uma legenda.
+
+```{r iris_scatter1, fig.cap="Isto é uma legenda."}
+ggplot(data=iris) + geom_point(aes(x=Petal.Width, y=Petal.Length, color=Species))
+```
+
+
