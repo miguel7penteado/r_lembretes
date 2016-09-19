@@ -100,13 +100,12 @@ message("Carregando...")
 library(colorout)
 
 message("Baixando e instalando biblioteca relatorio...")
- "formatR", "highr", "markdown", "yaml", "knitr", "rmarkdown", "rmdformats", "ggplot2", "dplyr", "DT"
 library(rmarkdown)
 library(rmdformats)
 library(ggplot2)
 library(dplyr)
 library(DT)
 
-render("segundo.Rmd")
+render("/home/sp-miguel/Documents/R/Laboratorio/r_lembretes/exercicio_markdown/segundo/segundo.Rmd")
 
 

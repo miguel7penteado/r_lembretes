@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 cat("\n+*************************************************************+")
-cat("\n| Carregamento de uma pagina web - versão 1                   |")
+cat("\n| Carregamento de uma pagina web - versão 2                   |")
 cat("\n+*************************************************************+")
 cat("\n|                                                             |")
 cat("\n+*************************************************************+")
@@ -31,9 +31,9 @@ if ( .Platform$OS.type == 'unix' )
 	# apt-get install pandoc-citeproc pandoc pandoc-data r-cran-yaml libyaml-0-2 libyaml-0-2-dbg  libyaml-dev libyaml-libyaml-perl
 	 
 	
-	cat(sprintf("Gerando diretório /exercicio_r_mapas/%s ...\n",Sys.Date()))
-	system(sprintf("mkdir -p ~/exercicio_r_mapas/%s",Sys.Date()))
-	setwd(sprintf("~/exercicio_r_mapas/%s",Sys.Date()))
+	cat(sprintf("Gerando diretório /exercicio_r_relatios_web/%s ...\n",Sys.Date()))
+	system(sprintf("mkdir -p ~/exercicio_r_relatios_web/%s",Sys.Date()))
+	setwd(sprintf("~/exercicio_r_relatios_web/%s",Sys.Date()))
 	system("pwd")
 	message("Definindo mapa de caracteres com suporte a acentuação e virgula - pt_BR.UTF-8")
 	options( encoding="UTF-8" )
@@ -47,9 +47,9 @@ if ( .Platform$OS.type == 'unix' )
 		cat("\n+*****************************************************************************************+")
 		cat("\n")
 
-		cat(sprintf("Gerando diretório C:\\%HOMEPATH%\\exercicio_r_mapas\\%s\n'' ...",Sys.Date()))
-		system(sprintf("mkdir C:\\%HOMEPATH%\\exercicio_r_mapas\\%s\\",Sys.Date()))
-		setwd(sprintf("C:\\%HOMEPATH%\\exercicio_r_mapas\\%s\\",Sys.Date()))
+		cat(sprintf("Gerando diretório C:\\%HOMEPATH%\\exercicio_r_relatios_web\\%s\n'' ...",Sys.Date()))
+		system(sprintf("mkdir C:\\%HOMEPATH%\\exercicio_r_relatios_web\\%s\\",Sys.Date()))
+		setwd(sprintf("C:\\%HOMEPATH%\\exercicio_r_relatios_web\\%s\\",Sys.Date()))
 		system("cd")
 		message("Definindo mapa de caracteres com suporte a acentuação e virgula do windows - windows-1252")
 		message("também definido como em sistemas de Banco de Dados como ISO-8859-1")
@@ -78,7 +78,7 @@ message("Apagando objetos de sessões anteriores...")
 rm(list=ls(all=TRUE))
 
 cat("\n+*****************************************************************************************+")
-cat(sprintf("\n|IMPORTANDO UM ARQUIVO VETORIAL USANDO WEBMAPS - %s |",Sys.Date()))
+cat(sprintf("\n|Instalando temas de relatórios - %s |",Sys.Date()))
 cat("\n+*****************************************************************************************+")
 cat("\n")
 
@@ -89,7 +89,7 @@ options(repos = r)
 rm(r)
 
 message("baixando pacotes e instalando formatR highr markdown yaml knitr")
-install.packages( c( "formatR", "highr", "markdown", "yaml", "knitr", "rmarkdown") )
+install.packages( c( "formatR", "highr", "markdown", "yaml", "knitr", "rmarkdown", "rmdformats", "ggplot2", "dplyr", "DT") )
 
 message("Carregando biblioteca devtools para obter colorout do github...")
 library(devtools)
@@ -99,6 +99,13 @@ install_github("jalvesaq/colorout")
 message("Carregando...")
 library(colorout)
 
-message("Baixando e instalando biblioteca webmap...")
-install_github("RCura/webmaps")
+message("Baixando e instalando biblioteca relatorio...")
+library(rmarkdown)
+library(rmdformats)
+library(ggplot2)
+library(dplyr)
+library(DT)
+
+render("/home/sp-miguel/Documents/R/Laboratorio/r_lembretes/exercicio_markdown/primeiro/primeiro.Rmd")
+
 
