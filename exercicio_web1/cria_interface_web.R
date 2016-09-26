@@ -93,26 +93,27 @@ r["CRAN"] = "https://vps.fmvz.usp.br/CRAN/"
 options(repos = r)
 rm(r)
 
-vetor_pacotes <- c( "downloader" ,
-                    "RCurl" ,
-                    "setwidth",
-                    "devtools",
-                    "rgdal",
-                    "plyr",
-                    "ggplot2",
-                    "lattice",
-                    "rgeos",
-                    "mapview",
-                    "shiny",
-                    "sp")
+vetor_pacotes <- c( "RCurl" , "devtools", "shiny", "shinyapps")
 
 message("baixando pacotes e instalando downloader RCurl setwidth devtools rgdal plyr ggplot2 lattice rgeos sp ")
 install.packages( vetor_pacotes )
 
-library(sp)
-library(ggplot2)
-library(gstat)
-library(rgdal)
-library(mapview)
+library(shiny)
+library(shinyapps)
 
-install.packages("shiny")
+interface <- fluidPage(
+  sliderInput(inputId = "obtido_usuario", label = "Escolha um numero", value = 25 , min =1 , max = 100),
+  plotOutput("mostre_ao_usuario")
+    
+);
+# interface tem funções de entrada e saida
+
+
+servidor <- function(input, output)
+{
+  output$mostre_ao_usuario <- renderPlot({ hist( rnorm(input$obtido_usuario) ) })
+  
+}
+
+shinyApp(ui = interface, server = servidor)
+
