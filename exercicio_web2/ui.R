@@ -7,13 +7,3 @@ interface <- fluidPage(
     
 );
 # interface tem funções de entrada e saida
-
-
-servidor <- function(input, output)
-{
-  output$mostre_ao_usuario <- renderPlot({ hist( rnorm(input$obtido_usuario) ) })
-  
-}
-
-shinyApp(ui = interface, server = servidor)
-
