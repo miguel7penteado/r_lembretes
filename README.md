@@ -8,4 +8,4 @@
 ![](http://logonoid.com/images/postgresql-logo.png) ![](https://upload.wikimedia.org/wikipedia/en/6/60/PostGIS_logo.png)
 >> Miguel Suarez Xavier Penteado
 
-`Para consultoria favor entrar em contato no miguel7penteado@gmail.com`
+
