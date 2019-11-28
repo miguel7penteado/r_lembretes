@@ -1,7 +1,7 @@
 # Exercício sobre criação de pacotes em `R`
 
 ```R
-{r obtendo_pacotes_net, eval=TRUE, echo=FALSE, message=FALSE,message=FALSE}
+#{r obtendo_pacotes_net, eval=TRUE, echo=FALSE, message=FALSE,message=FALSE}
 
 #!/usr/bin/env Rscript
 
