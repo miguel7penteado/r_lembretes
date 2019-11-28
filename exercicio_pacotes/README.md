@@ -1,6 +1,6 @@
 # Exercício sobre criação de pacotes em `R`
 
-```{R, 1-Carga de Pacotes}
+```{r obtendo_pacotes_net, eval=TRUE, echo=FALSE, message=FALSE,message=FALSE}
 
 #!/usr/bin/env Rscript
 
