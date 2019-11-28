@@ -1,5 +1,7 @@
 # Exercício sobre criar funções em R
 
+## Exercício 1
+
 ```R
 library(knitr)
 library(rmdformats)
@@ -23,3 +25,7 @@ resultado <- minha_funcao_1(1,2)
 
 print(resultado)
 ```
+
+## Exercício 2
+
+
